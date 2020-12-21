@@ -1,0 +1,35 @@
+{
+	"info": {
+		"_postman_id": "5de0107e-b0dc-47b8-82a2-a95dfe439e49",
+		"name": "EoloPlanner",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "TopoService",
+			"item": [
+				{
+					"name": "getTopographyDetails",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/topographicdetails/Bilbao",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"topographicdetails",
+								"Bilbao"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
