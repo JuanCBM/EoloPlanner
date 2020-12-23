@@ -24,7 +24,6 @@ public class PlannerApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws InterruptedException {
         System.out.println("[Application] Enviando el mensaje \"" + MESSAGE + "\"...");
-        //Thread.sleep(50000);
-        //rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, RabbitMqConfig.ROUTING_KEY, MESSAGE);
+        rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, RabbitMqConfig.ROUTING_KEY, MESSAGE);
     }
 }
