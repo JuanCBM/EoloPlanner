@@ -12,7 +12,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 public class PlannerApplication implements CommandLineRunner {
 
-    private static final String MESSAGE = "Hello world!";
+    private static final String MESSAGE = "Madrid";
 
     @Autowired
     RabbitTemplate rabbitTemplate;
@@ -24,6 +24,7 @@ public class PlannerApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws InterruptedException {
         System.out.println("[Application] Enviando el mensaje \"" + MESSAGE + "\"...");
-        rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, RabbitMqConfig.ROUTING_KEY, MESSAGE);
+        //Thread.sleep(50000);
+        //rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, RabbitMqConfig.ROUTING_KEY, MESSAGE);
     }
 }

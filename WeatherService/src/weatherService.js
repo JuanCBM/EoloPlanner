@@ -1,7 +1,7 @@
 const MIN_DELAY = 1;
 const MAX_DELAY = 3;
 
-async function GetWeather(call, callback){
+async function getWeather(call, callback){
 
     console.log('Request received: '+JSON.stringify(call));
 
@@ -41,4 +41,4 @@ function randomNumber(minIncluded, maxNotIncluded) {
     return Math.random() * (maxNotIncluded - minIncluded) + minIncluded;
 }
 
-exports.GetWeather = GetWeather;
+exports.getWeather = getWeather;
