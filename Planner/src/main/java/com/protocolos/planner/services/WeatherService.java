@@ -1,6 +1,6 @@
 package com.protocolos.planner.services;
 
-import com.protocolos.planner.Weather;
+import com.protocolos.eoloplanner.Weather;
 
 public interface WeatherService {
     Weather getWeatherDetails(String city) throws Exception;

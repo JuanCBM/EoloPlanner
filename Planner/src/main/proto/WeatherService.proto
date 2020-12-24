@@ -1,5 +1,5 @@
 syntax = "proto3";
-package com.protocolos.planner;
+package com.protocolos.eoloplanner;
 option java_multiple_files = true;
 
 message GetWeatherRequest {

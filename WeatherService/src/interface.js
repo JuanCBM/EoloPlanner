@@ -12,4 +12,4 @@ var packageDefinition = protoLoader.loadSync(__dirname + '/../WeatherService.pro
 
 var weatherServiceProto = grpc.loadPackageDefinition(packageDefinition);
 
-module.exports = weatherServiceProto.WeatherService;
+module.exports = weatherServiceProto.com.protocolos.eoloplanner.WeatherService;

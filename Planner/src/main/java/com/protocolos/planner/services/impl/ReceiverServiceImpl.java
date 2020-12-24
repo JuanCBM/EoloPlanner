@@ -1,6 +1,6 @@
 package com.protocolos.planner.services.impl;
 
-import com.protocolos.planner.Weather;
+import com.protocolos.eoloplanner.Weather;
 import com.protocolos.planner.models.Topography;
 import com.protocolos.planner.services.TopoService;
 import com.protocolos.planner.services.WeatherService;

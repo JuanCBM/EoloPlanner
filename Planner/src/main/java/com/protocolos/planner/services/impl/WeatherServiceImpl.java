@@ -1,8 +1,8 @@
 package com.protocolos.planner.services.impl;
 
-import com.protocolos.planner.GetWeatherRequest;
-import com.protocolos.planner.Weather;
-import com.protocolos.planner.WeatherServiceGrpc.WeatherServiceBlockingStub;
+import com.protocolos.eoloplanner.GetWeatherRequest;
+import com.protocolos.eoloplanner.Weather;
+import com.protocolos.eoloplanner.WeatherServiceGrpc.WeatherServiceBlockingStub;
 import com.protocolos.planner.services.WeatherService;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.slf4j.Logger;
