@@ -6,10 +6,10 @@ async function getWeather(call, callback){
     console.log('Request received: '+JSON.stringify(call));
 
     let { city } = call.request;
-    let weather = 'Sunny';
+    let weather = 'sunny';
 
     if(startsWithVocal(city)){
-        weather = 'Rainy'
+        weather = 'rainy'
     }
 
     await sleep(randomNumber(MIN_DELAY, MAX_DELAY + 1));
