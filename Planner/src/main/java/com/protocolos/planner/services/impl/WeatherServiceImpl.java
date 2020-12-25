@@ -5,28 +5,27 @@ import com.protocolos.eoloplanner.Weather;
 import com.protocolos.eoloplanner.WeatherServiceGrpc.WeatherServiceBlockingStub;
 import com.protocolos.planner.services.WeatherService;
 import net.devh.boot.grpc.client.inject.GrpcClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class WeatherServiceImpl implements WeatherService {
-    private static final Logger logger = LoggerFactory.getLogger(WeatherServiceImpl.class);
 
     @GrpcClient("weatherServer")
     private WeatherServiceBlockingStub client;
 
+    @Async
     @Override
-    public Weather getWeatherDetails(String city) throws Exception {
-        logger.info("Get Weather Details {}", city);
+    public CompletableFuture<Weather> getWeatherDetails(String city) throws Exception {
+
         GetWeatherRequest request = GetWeatherRequest.newBuilder()
                 .setCity(city)
                 .build();
 
         Weather responseWeather = this.client.getWeather(request);
 
-        System.out.println("Response received from server:\n" + responseWeather);
-
-        return responseWeather;
+        return CompletableFuture.completedFuture(responseWeather);
     }
 }
