@@ -13,7 +13,7 @@ async function getWeather(call, callback){
     }
 
     await sleep(randomNumber(MIN_DELAY, MAX_DELAY + 1));
-
+   
     callback(null, { city: city,
                     weather: weather });
 }
@@ -34,11 +34,11 @@ function startsWithVocal (chain) {
 }
 
 function sleep(s) {
-    return new Promise(resolve => setTimeout(resolve, s/1000));
+    return new Promise(resolve => setTimeout(resolve, s*1000));
 }
 
 function randomNumber(minIncluded, maxNotIncluded) {
-    return Math.random() * (maxNotIncluded - minIncluded) + minIncluded;
+    return Math.floor(Math.random() * (maxNotIncluded - minIncluded) + minIncluded);
 }
 
 exports.getWeather = getWeather;
