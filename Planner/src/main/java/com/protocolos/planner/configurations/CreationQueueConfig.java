@@ -12,40 +12,40 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitMqConfig {
+public class CreationQueueConfig {
 
-    public static final String EXCHANGE_NAME = "exchange_name";
-    public static final String ROUTING_KEY = "routing_key";
+    public static final String EXCHANGE_CREATION_NAME = "exchange_creation_name";
+    public static final String ROUTING_CREATION_KEY = "routing_creation_key";
+    private static final String QUEUE_CREATION_NAME = "eoloplantCreationRequests";
 
-    private static final String QUEUE_NAME = "eoloplantCreationRequests";
     private static final boolean IS_DURABLE_QUEUE = false;
 
     @Bean
-    Queue queue() {
-        return new Queue(QUEUE_NAME, IS_DURABLE_QUEUE);
+    Queue creationQueue() {
+        return new Queue(QUEUE_CREATION_NAME, IS_DURABLE_QUEUE);
     }
 
     @Bean
-    TopicExchange exchange() {
-        return new TopicExchange(EXCHANGE_NAME);
+    TopicExchange creationExchange() {
+        return new TopicExchange(EXCHANGE_CREATION_NAME);
     }
 
     @Bean
-    Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
+    Binding creationBinding(Queue creationQueue, TopicExchange creationExchange) {
+        return BindingBuilder.bind(creationQueue).to(creationExchange).with(ROUTING_CREATION_KEY);
     }
 
     @Bean
-    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
+    SimpleMessageListenerContainer creationContainer(ConnectionFactory connectionFactory, MessageListenerAdapter creationListenerAdapter) {
         final SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(QUEUE_NAME);
-        container.setMessageListener(listenerAdapter);
+        container.setQueueNames(QUEUE_CREATION_NAME);
+        container.setMessageListener(creationListenerAdapter);
         return container;
     }
 
     @Bean
-    MessageListenerAdapter listenerAdapter(ReceiverServiceImpl receiverServiceImpl) {
+    MessageListenerAdapter creationListenerAdapter(ReceiverServiceImpl receiverServiceImpl) {
         return new MessageListenerAdapter(receiverServiceImpl, ReceiverServiceImpl.RECEIVE_METHOD_NAME);
     }
 }

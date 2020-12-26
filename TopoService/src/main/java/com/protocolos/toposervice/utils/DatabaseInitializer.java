@@ -25,6 +25,7 @@ public class DatabaseInitializer {
                 new Topography("Barcelona", "flat"),
                 new Topography("Soria", "montain"),
                 new Topography("Santander", "montain"),
+                new Topography("Albacete", "montain"),
                 new Topography("Bilbao", "flat"));
 
         topographyFlux
