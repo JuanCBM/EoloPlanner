@@ -1,6 +1,7 @@
 package com.protocolos.planner;
 
-import com.protocolos.planner.configurations.RabbitMqConfig;
+import com.protocolos.planner.configurations.CreationQueueConfig;
+import com.protocolos.planner.configurations.NotificationQueueConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -24,6 +25,6 @@ public class PlannerApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws InterruptedException {
         System.out.println("[Application] Enviando el mensaje \"" + MESSAGE + "\"...");
-        rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, RabbitMqConfig.ROUTING_KEY, MESSAGE);
+        rabbitTemplate.convertAndSend(CreationQueueConfig.EXCHANGE_CREATION_NAME, CreationQueueConfig.ROUTING_CREATION_KEY, MESSAGE);
     }
 }
