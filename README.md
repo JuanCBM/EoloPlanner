@@ -1,9 +1,15 @@
 # EoloPlanner
 
 ### RabbitMQ 
-Cola de mensajes eoloplantCreationRequests.
+Disponemos de dos colas:
+* eoloplantCreationRequests: Manda mensajes de creación de plantas.
+* eoloplantCreationProgressNotifications: Manda mensajes de porcentaje de creación de la planta.
+
 > docker run --rm -p 5672:5672 -p 15672:15672 rabbitmq:3-management 
 
+Enlace al gestor de rabbitmq: [http://localhost:15672/](http://localhost:15672/)
+* User: guest 
+* Pass: guest
 
 ### Planner
 Consume mensajes de la cola, conecta con WeatherService y TopoService, escribe mensaje en la cola.
