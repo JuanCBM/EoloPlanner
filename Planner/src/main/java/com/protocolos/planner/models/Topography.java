@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Topography {
-    private String id;
-    private String landscape;
+
+  private String id;
+  private String landscape;
+
 }

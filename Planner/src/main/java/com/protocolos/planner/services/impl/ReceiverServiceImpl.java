@@ -1,89 +1,119 @@
 package com.protocolos.planner.services.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.protocolos.eoloplanner.Weather;
+import com.protocolos.planner.exceptions.ProcessingMessageException;
+import com.protocolos.planner.models.City;
 import com.protocolos.planner.models.Topography;
 import com.protocolos.planner.services.TopoService;
 import com.protocolos.planner.services.WeatherService;
 import com.protocolos.planner.services.WriterService;
-import org.apache.commons.lang3.RandomUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ReceiverServiceImpl {
-    public static final String RECEIVE_METHOD_NAME = "messageProcessor";
 
-    private static final Logger logger = LoggerFactory.getLogger(ReceiverServiceImpl.class);
+  public static final String RECEIVE_METHOD_NAME = "messageProcessor";
 
-    private static final char LETTER_LIMIT = 'm';
-    private static final int SEGMENT_PERCENTAGE = 25;
-    private static final int MIN_DELAY = 1;
-    private static final int MAX_DELAY = 3;
+  private static final Logger logger = LoggerFactory.getLogger(ReceiverServiceImpl.class);
 
-    private final TopoService topoService;
-    private final WeatherService weatherService;
-    private final WriterService writerService;
+  private static final char LETTER_LIMIT = 'm';
+  private static final int SEGMENT_PERCENTAGE = 25;
+  private static final int MIN_DELAY = 1;
+  private static final int MAX_DELAY = 3;
+  private static final Integer INITIAL_PERCENTAGE = 0;
+  private static final Integer MAX_PERCENTAGE = 100;
 
-    public ReceiverServiceImpl(TopoService topoService, WeatherService weatherService, WriterService writerService) {
-        this.topoService = topoService;
-        this.weatherService = weatherService;
-        this.writerService = writerService;
+  private static final ObjectMapper mapper = new ObjectMapper();
+  private final TopoService topoService;
+  private final WeatherService weatherService;
+  private final WriterService writerService;
+
+  public ReceiverServiceImpl(TopoService topoService, WeatherService weatherService,
+      WriterService writerService) {
+    this.topoService = topoService;
+    this.weatherService = weatherService;
+    this.writerService = writerService;
+  }
+
+  public void messageProcessor(String message) throws Exception {
+    logger.info("[Receiver] Ha recibido el mensaje \"" + message + '"');
+
+    City city = configureInitialCityData(message);
+    final AtomicReference<String> cityConcatenation = new AtomicReference<>(city.getCity());
+    final AtomicReference<Integer> percentage = new AtomicReference<>(INITIAL_PERCENTAGE);
+
+    logger.info("[Receiver] Ha recibido la ciudad: {}", city);
+
+    // Asynchronous executions
+    CompletableFuture<Topography> page1 = this.topoService.getTopographicDetails(city.getCity());
+    CompletableFuture<Weather> page2 = this.weatherService.getWeatherDetails(city.getCity());
+    logger.info("Looking up for {} weather and topography ", city.getCity());
+    percentage.set(percentage.get() + SEGMENT_PERCENTAGE);
+
+    page1.thenAccept(topography -> {
+      logger.info("[TOPOGRAPHY] Got topography detail from remote topo service {}",
+          topography.getLandscape());
+      writeMessageToNotificationQueue(percentage, cityConcatenation, city,
+          topography.getLandscape());
+    });
+
+    page2.thenAccept(weather -> {
+      logger.info("[WEATHER] Got weather detail from remote weather service {}",
+          weather.getWeather());
+      writeMessageToNotificationQueue(percentage, cityConcatenation, city, weather.getWeather());
+    });
+
+    // Wait until they are all done
+    CompletableFuture.allOf(page1, page2).join();
+    TimeUnit.SECONDS.sleep(RandomUtils.nextInt(MIN_DELAY, MAX_DELAY + 1));
+
+    writeMessageToNotificationQueue(percentage, cityConcatenation, city, StringUtils.EMPTY);
+
+  }
+
+  private void writeMessageToNotificationQueue(AtomicReference<Integer> percentage,
+      AtomicReference<String> cityConcatenation,
+      City city,
+      String message) {
+    percentage.set(percentage.get() + SEGMENT_PERCENTAGE);
+    city.setProgress(percentage.get());
+
+    cityConcatenation.set(cityConcatenation.get().concat(message));
+
+    if (MAX_PERCENTAGE.equals(city.getProgress())) {
+      city.setCompleted(Boolean.TRUE);
+      if (city.getCity().toLowerCase().charAt(0) <= LETTER_LIMIT) {
+        city.setPlanning(cityConcatenation.get().toLowerCase());
+      } else {
+        city.setPlanning(cityConcatenation.get().toUpperCase());
+      }
     }
 
-    // TODO: Escribir en las colas el formato correcto.
-    public void messageProcessor(String city) throws Exception {
-        logger.info("[Receiver] Ha recibido el mensaje \"" + city + '"');
-
-        final AtomicReference<String> cityConcatenation = new AtomicReference<>(city);
-        final AtomicReference<Integer> percentage = new AtomicReference<>(0);
-
-        // Asynchronous executions
-        CompletableFuture<Topography> page1 = this.topoService.getTopographicDetails(city);
-        CompletableFuture<Weather> page2 = this.weatherService.getWeatherDetails(city);
-        logger.info("Looking up for {} weather and topography ", city);
-        addSegmentPercentage(percentage);
-
-        page1.thenAccept(topography -> {
-            logger.info("[TOPOGRAPHY] Got topography detail from remote topo service {}", topography.getLandscape());
-            addSegmentPercentage(percentage);
-            // Escribir en la cola %
-            cityConcatenation.set(cityConcatenation.get().concat(topography.getLandscape()));
-            this.writerService.write(city+"_"+percentage);
-        });
-
-        page2.thenAccept(weather -> {
-            logger.info("[WEATHER] Got weather detail from remote weather service {}", weather.getWeather());
-            addSegmentPercentage(percentage);
-            // Escribir en la cola %
-            cityConcatenation.set(cityConcatenation.get().concat(weather.getWeather()));
-            this.writerService.write(city+"_"+percentage);
-        });
-
-        // Wait until they are all done
-        CompletableFuture.allOf(page1, page2).join();
-        TimeUnit.SECONDS.sleep(RandomUtils.nextInt(MIN_DELAY, MAX_DELAY + 1));
-        addSegmentPercentage(percentage);
-
-        if(city.toLowerCase().charAt(0) <= LETTER_LIMIT){
-            // Escribir en la cola %
-            logger.info("--> {} {}%", cityConcatenation.get().toLowerCase(), percentage);
-            this.writerService.write(city+"_"+percentage);
-        }else{
-            // Escribir en la cola %
-            logger.info("--> {} {}%", cityConcatenation.get().toUpperCase(), percentage);
-            this.writerService.write(city+"_"+percentage);
-        }
-
+    try {
+      this.writerService.write(mapper.writeValueAsString(city));
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+      logger.error("[ERROR] error procesando los datos {}", e);
+      throw new ProcessingMessageException();
     }
 
-    private void addSegmentPercentage(AtomicReference<Integer> percentage) {
-        percentage.set(percentage.get() + SEGMENT_PERCENTAGE);
-        logger.info("--> {}%", percentage);
-    }
+  }
+
+  private City configureInitialCityData(String message) throws JsonProcessingException {
+    City city = mapper.readValue(message, City.class);
+    city.setCompleted(Boolean.FALSE);
+    city.setProgress(INITIAL_PERCENTAGE);
+
+    return city;
+  }
 
 }
