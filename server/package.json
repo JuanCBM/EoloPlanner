@@ -9,9 +9,11 @@
     "author": "Mangel Y Juan Carlos",
     "dependencies": {
         "amqplib": "^0.5.5",
-        "axios": "^0.19.0",
+        "axios": "^0.21.1",
         "express": "^4.17.1",
         "express-ws": "^4.0.0",
-        "uuid": "^3.3.3"
+        "uuid": "^3.3.3",
+        "mysql2": "^2.2.5",
+        "sequelize": "^6.3.5"
     }
 }
