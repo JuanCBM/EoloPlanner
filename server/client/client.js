@@ -3,9 +3,14 @@ const WebSocket = require('ws');
 
 let webSocket = new WebSocket("ws://" + window.location.hostname + "/plantNotifications");
 const baseUrlPath = "http://localhost:3000/eolicplants";
+const topographyUrlPath = "http://localhost:8080/api/topographicdetails/cityLandscapes";
+let availableCities = [];
+let socketId = null;
 let plantsCreated = [];
 
 loadPlants();
+loadAvailableCities();
+
 
 
 function subscribeToNotificationPlant() {
@@ -15,8 +20,12 @@ function subscribeToNotificationPlant() {
 
     webSocket.onmessage = function (event) {
         let plant = JSON.parse(event.data);
-        console.log(`Message from socket: ${plant}`);
-        updateProgress(plant);
+        console.log(`Message from socket: ${JSON.stringify(plant)}`);
+        if (plant.socketId) {
+            socketId = plant.socketId;
+        }else{
+            updateProgress(plant);
+        }
     };
 
     webSocket.onclose = function (event) {
@@ -52,12 +61,16 @@ function controlCreatingPlantButton() {
 
 function createPlant() {
     let city = document.getElementById("city").value;
-    let plant = { "city": city };
+    let plant = { "city": city, "progress": 0};
 
+  if (city == "" || !isCityAvailable(city)) {
+    alert("You must enter a valid city");
+  } else {
     fetch(baseUrlPath, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'socketid': socketId
         },
         body: JSON.stringify(plant)
     })
@@ -75,6 +88,7 @@ function createPlant() {
         .catch(function (err) {
             console.log(err);
         });
+    }
 }
 
 function addPlantToList(plant) {
@@ -82,6 +96,14 @@ function addPlantToList(plant) {
     let ul = document.getElementById("plants");
     let li = document.createElement("li");
     li.appendChild(document.createTextNode(plant.city));
+    ul.appendChild(li);
+}
+
+function addCityLandscapeToList(cityLandscape) {
+    availableCitiesCreated.push({city: cityLandscape.id});
+    let ul = document.getElementById("availableCities");
+    let li = document.createElement("li");
+    li.appendChild(document.createTextNode(cityLandscape.id));
     ul.appendChild(li);
 }
 
@@ -122,6 +144,39 @@ function loadPlants() {
         .catch(function (err) {
             console.log(err);
         });
+}
+
+function loadAvailableCities() {
+    fetch(topographyUrlPath, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw "Error getting eolic plants created";
+            }
+        })
+        .then(function (landscapes) {
+            for (let landscape of landscapes) {
+                addCityLandscapeToList(landscape);
+            }
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
+}
+
+function isCityAvailable(nameCity){
+    for (var i=0; i < availableCitiesCreated.length; i++) {
+        if (availableCitiesCreated[i].city.toLowerCase() === nameCity.toLowerCase()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 $('#createPlant').click(createPlant);
