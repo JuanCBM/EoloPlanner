@@ -1,6 +1,7 @@
 const axios = require('axios').default;
+const WebSocket = require('ws');
 
-let webSocket = new WebSocket("ws://" + window.location.host + "/plantNotifications");
+let webSocket = new WebSocket("ws://" + window.location.hostname + "/plantNotifications");
 const baseUrlPath = "http://localhost:3000/eolicplants";
 let plantsCreated = [];
 

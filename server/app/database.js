@@ -1,7 +1,7 @@
 const mysql = require('mysql2/promise');
 const { Sequelize, DataTypes } = require('sequelize');
 const database = "eoloplant";
-const plantRoutes = require('../routes/plant');
+const plantRoutes = require('../routes/plantRoutes');
 const plantModel = require('../models/plant');
 const queue = require('./queue');
 
