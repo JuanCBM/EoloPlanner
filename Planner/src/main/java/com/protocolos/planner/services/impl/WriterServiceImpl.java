@@ -21,7 +21,6 @@ public class WriterServiceImpl implements WriterService {
   @Override
   public void write(String message) {
     logger.info("[Writer] Enviando el mensaje \"" + message + "\"...");
-    rabbitTemplate.convertAndSend(NotificationQueueConfig.EXCHANGE_NOTIFICATION_NAME,
-        NotificationQueueConfig.ROUTING_NOTIFICATION_KEY, message);
+    rabbitTemplate.convertAndSend(NotificationQueueConfig.QUEUE_NOTIFICATION_NAME, message);
   }
 }

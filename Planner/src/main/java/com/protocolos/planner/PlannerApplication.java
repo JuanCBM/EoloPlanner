@@ -24,14 +24,14 @@ public class PlannerApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws InterruptedException, JsonProcessingException {
+    public void run(String... args) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
 
         City city = City.builder().city("Madrid").id(1L).build();
         String message = mapper.writeValueAsString(city);
         System.out.println("[Application] Enviando el mensaje \"" + message + "\"...");
 
-        rabbitTemplate.convertAndSend(CreationQueueConfig.EXCHANGE_CREATION_NAME, CreationQueueConfig.ROUTING_CREATION_KEY, message);
+        rabbitTemplate.convertAndSend(CreationQueueConfig.QUEUE_CREATION_NAME, message);
 
     }
 }

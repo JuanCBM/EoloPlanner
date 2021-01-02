@@ -3,6 +3,7 @@ package com.protocolos.planner.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.protocolos.eoloplanner.Weather;
+import com.protocolos.planner.configurations.CreationQueueConfig;
 import com.protocolos.planner.exceptions.ProcessingMessageException;
 import com.protocolos.planner.models.City;
 import com.protocolos.planner.models.Topography;
@@ -16,12 +17,11 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ReceiverServiceImpl {
-
-  public static final String RECEIVE_METHOD_NAME = "messageProcessor";
 
   private static final Logger logger = LoggerFactory.getLogger(ReceiverServiceImpl.class);
 
@@ -44,6 +44,7 @@ public class ReceiverServiceImpl {
     this.writerService = writerService;
   }
 
+  @RabbitListener(queues = CreationQueueConfig.QUEUE_CREATION_NAME, ackMode = "AUTO")
   public void messageProcessor(String message) throws Exception {
     logger.info("[Receiver] Ha recibido el mensaje \"" + message + '"');
 
