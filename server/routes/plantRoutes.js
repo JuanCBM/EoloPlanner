@@ -15,7 +15,7 @@ module.exports = (app, Plant, queue) => {
                 completed: false,
                 planning: null
             });
-            queue.sendMessage(JSON.stringify({ id: result.id, city: result.city }));
+            queue.sendMessageToQueue({ id: result.id, city: result.city });
         }).catch(function (err) {
             console.log(err);
             //TODO: Cambiar el error o vercomo lo solventamos

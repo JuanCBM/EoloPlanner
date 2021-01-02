@@ -8,7 +8,8 @@ const queue = require('./queue');
 async function initialize(app) {
     // create db if it doesn't already exist
     const connection = await mysql.createConnection({ host: "localhost", port: "3306", user: "root", password: "pass" });
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
+    await connection.query(`DROP DATABASE IF EXISTS \`${database}\`;`);
+    await connection.query(`CREATE DATABASE \`${database}\`;`);
 
     // connect to db
     const sequelize = new Sequelize(database, "root", "pass", { dialect: 'mysql' });

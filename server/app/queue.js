@@ -2,8 +2,8 @@ const amqp = require('amqplib/callback_api');
 
 const CONN_URL = 'amqp://guest:guest@localhost';
 
-const createPlantRequestQueue = 'plantCreationRequests';
-const notificationsQueue = 'plantCreationProgressNotifications';
+const createPlantRequestQueue = 'eoloplantCreationRequests';
+const notificationsQueue = 'eoloplantCreationProgressNotifications';
 
 let notificationChannel = null;
 let creationChannel = null;
@@ -17,7 +17,7 @@ async function initialize(wss) {
                 throw error;
             }
             channel.assertQueue(notificationsQueue, {
-                durable: true
+                durable: false
             });
 
             channel.consume(notificationsQueue, function (msg) {
@@ -37,7 +37,7 @@ async function initialize(wss) {
                 throw error;
             }
             channel.assertQueue(createPlantRequestQueue, {
-                durable: true
+                durable: false
             });
         });
     });
@@ -52,9 +52,10 @@ process.on('exit', (code) => {
 
 
 const sendMessageToQueue = (message) => {
+    let opts = { headers: { 'Content-Type': 'application/json'}};
 
     console.log("publishToQueue: '" + message + "'");
-    creationChannel.sendMessageToQueue(createPlantRequestQueue, Buffer.from(message));
+    creationChannel.sendToQueue(createPlantRequestQueue, Buffer.from(JSON.stringify(message)), opts);
 };
 
 module.exports.initialize = initialize;

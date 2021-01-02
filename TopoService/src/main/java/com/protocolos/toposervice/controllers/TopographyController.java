@@ -19,7 +19,7 @@ public class TopographyController {
     }
 
     @GetMapping("/{id}")
-    public Mono<TopographyDTO> getUser(@PathVariable String id){
+    public Mono<TopographyDTO> getTopography(@PathVariable String id){
         return topographyService.findById(id);
     }
 }

@@ -1,17 +1,13 @@
-const axios = require('axios').default;
-const WebSocket = require('ws');
-
 let webSocket = new WebSocket("ws://" + window.location.hostname + "/plantNotifications");
-const baseUrlPath = "http://localhost:3000/eolicplants";
+const baseUrlPath = "http://localhost:3000/plants";
 const topographyUrlPath = "http://localhost:8080/api/topographicdetails/cityLandscapes";
-let availableCities = [];
+let availableCitiesCreated = [];
 let socketId = null;
 let plantsCreated = [];
 
 loadPlants();
-loadAvailableCities();
-
-
+//loadAvailableCities();
+subscribeToNotificationPlant();
 
 function subscribeToNotificationPlant() {
     webSocket.onopen = function (e) {
@@ -63,7 +59,7 @@ function createPlant() {
     let city = document.getElementById("city").value;
     let plant = { "city": city, "progress": 0};
 
-  if (city == "" || !isCityAvailable(city)) {
+  if (city == "" ) { //|| !isCityAvailable(city)
     alert("You must enter a valid city");
   } else {
     fetch(baseUrlPath, {
@@ -76,7 +72,7 @@ function createPlant() {
     })
         .then(function (response) {
             if (response.ok) {
-                manageCreatingPlantButton();
+                controlCreatingPlantButton();
                 return response.json()
             } else {
                 throw "Error en la llamada Ajax";
@@ -178,11 +174,6 @@ function isCityAvailable(nameCity){
     }
     return false;
 }
-
-$('#createPlant').click(createPlant);
-$('#getPlantInfo').click(getPlantInfo);
-$('#subscribeToNotificationPlant').click(subscribeToNotificationPlant);
-
 
 //TODO 2 FORMS OF MAKE THAT, I PREFER THE SECOND BUT NEED TODISCUSS
 
