@@ -58,7 +58,7 @@ public class ReceiverServiceImpl {
     CompletableFuture<Topography> page1 = this.topoService.getTopographicDetails(city.getCity());
     CompletableFuture<Weather> page2 = this.weatherService.getWeatherDetails(city.getCity());
     logger.info("Looking up for {} weather and topography ", city.getCity());
-    percentage.set(percentage.get() + SEGMENT_PERCENTAGE);
+    writeMessageToNotificationQueue(percentage, cityConcatenation, city, StringUtils.EMPTY);
 
     page1.thenAccept(topography -> {
       logger.info("[TOPOGRAPHY] Got topography detail from remote topo service {}",

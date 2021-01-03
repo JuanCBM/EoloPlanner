@@ -11,7 +11,7 @@ const queue = require('./app/queue');
 let wss = expressWs.getWss('/notifications');
 
 db.initialize(app);
-server.initialize(app);
+server.initialize(app, wss);
 queue.initialize(wss)
 
 app.use(express.static('client'));
