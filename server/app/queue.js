@@ -1,6 +1,9 @@
 const amqp = require('amqplib/callback_api');
-
+const db = require('../app/database');
 const CONN_URL = 'amqp://guest:guest@localhost';
+
+const socketIds = require('../models/socketId');
+
 
 const createPlantRequestQueue = 'eoloplantCreationRequests';
 const notificationsQueue = 'eoloplantCreationProgressNotifications';
@@ -23,11 +26,16 @@ async function initialize(wss) {
             channel.consume(notificationsQueue, function (msg) {
 
                 console.log("Message:", msg.content.toString());
-                wss.clients.forEach(function (client) {
-                    console.log('Client:' + client);
-                    client.send(msg.content.toString());
-                });
+                    let plant = JSON.parse(msg.content.toString());
 
+                    wss.clients.forEach(function (client) {
+                        if (client.id === socketIds.getClient(plant.id).client) {
+
+                            console.log('Client:' + client);
+                            client.send(msg.content.toString());
+                        }
+                });
+                    updateDatabase(JSON.parse(msg.content))
             }, { noAck: true }
             );
         });
@@ -52,11 +60,15 @@ process.on('exit', (code) => {
 
 
 const sendMessageToQueue = (message) => {
-    let opts = { headers: { 'Content-Type': 'application/json'}};
-
     console.log("publishToQueue: '" + message + "'");
-    creationChannel.sendToQueue(createPlantRequestQueue, Buffer.from(JSON.stringify(message)), opts);
+    creationChannel.sendToQueue(createPlantRequestQueue, Buffer.from(message));
 };
+
+function updateDatabase(plantInfo) {
+    db.Plant.update(
+        {progress: plantInfo.progress},
+        {where: {id: plantInfo.id}})
+}
 
 module.exports.initialize = initialize;
 module.exports.sendMessageToQueue = sendMessageToQueue;

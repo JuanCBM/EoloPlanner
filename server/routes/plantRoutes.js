@@ -1,3 +1,5 @@
+const socketIds = require('../models/socketId');
+
 module.exports = (app, Plant, queue) => {
 
     app.get("/plants/", (req, res) =>
@@ -15,7 +17,8 @@ module.exports = (app, Plant, queue) => {
                 completed: false,
                 planning: null
             });
-            queue.sendMessageToQueue({ id: result.id, city: result.city });
+            socketIds.add(result.id, req.headers.socketid);
+            queue.sendMessageToQueue(JSON.stringify({ id: result.id, city: result.city }));
         }).catch(function (err) {
             console.log(err);
             //TODO: Cambiar el error o vercomo lo solventamos

@@ -1,21 +1,21 @@
-let webSocket = new WebSocket("ws://" + window.location.hostname + "/plantNotifications");
+let webSocket = new WebSocket("ws://" + window.location.host + "/plantNotifications");
 const baseUrlPath = "http://localhost:3000/plants";
-const topographyUrlPath = "http://localhost:8080/api/topographicdetails/cityLandscapes";
 let availableCitiesCreated = [];
 let socketId = null;
 let plantsCreated = [];
 
 loadPlants();
-//loadAvailableCities();
-subscribeToNotificationPlant();
+loadAvailableCities();
 
-function subscribeToNotificationPlant() {
     webSocket.onopen = function (e) {
         console.log("WebSocket connection established");
     };
 
     webSocket.onmessage = function (event) {
+        console.debug("WebSocket message received:", event);
+
         let plant = JSON.parse(event.data);
+        console.log("eventoMensaje")
         console.log(`Message from socket: ${JSON.stringify(plant)}`);
         if (plant.socketId) {
             socketId = plant.socketId;
@@ -36,7 +36,6 @@ function subscribeToNotificationPlant() {
         console.log(`[error] ${error.message}`);
     };
 
-}
 
 function updateProgress(plant) {
     let progressText = document.getElementById("progressText");
@@ -51,15 +50,17 @@ function updateProgress(plant) {
 }
 
 function controlCreatingPlantButton() {
-    let createPlant = document.getElementById("createPlant");
-    createPlant.disabled ? createPlant.disabled = false : createPlant.disabled = true;
+    let createPlant = document.getElementById("creationButtonPlant");
+    if (createPlant!=null){
+        createPlant.disabled ? createPlant.disabled = false : createPlant.disabled = true;
+    }
 }
 
 function createPlant() {
     let city = document.getElementById("city").value;
     let plant = { "city": city, "progress": 0};
 
-  if (city == "" ) { //|| !isCityAvailable(city)
+  if (city === "" || !isCityAvailable(city)){
     alert("You must enter a valid city");
   } else {
     fetch(baseUrlPath, {
@@ -97,10 +98,10 @@ function addPlantToList(plant) {
 
 function addCityLandscapeToList(cityLandscape) {
     availableCitiesCreated.push({city: cityLandscape.id});
-    let ul = document.getElementById("availableCities");
-    let li = document.createElement("li");
-    li.appendChild(document.createTextNode(cityLandscape.id));
-    ul.appendChild(li);
+    let aC = document.getElementById("availableCities");
+    let liAc = document.createElement("li");
+    liAc?.appendChild(document.createTextNode(cityLandscape.id));
+    aC?.appendChild(liAc);
 }
 
 async function getPlantInfo() {
@@ -143,31 +144,20 @@ function loadPlants() {
 }
 
 function loadAvailableCities() {
-    fetch(topographyUrlPath, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(function (response) {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw "Error getting eolic plants created";
-            }
-        })
-        .then(function (landscapes) {
+    let landscapes = [
+        {id: "Madrid"},
+        {id: "Barcelona"},
+        {id: "Soria"},
+        {id: "Santander"},
+        {id: "Albacete"},
+        {id: "Bilbao"}];
             for (let landscape of landscapes) {
                 addCityLandscapeToList(landscape);
             }
-        })
-        .catch(function (err) {
-            console.log(err);
-        });
 }
 
 function isCityAvailable(nameCity){
-    for (var i=0; i < availableCitiesCreated.length; i++) {
+    for (let i=0; i < availableCitiesCreated.length; i++) {
         if (availableCitiesCreated[i].city.toLowerCase() === nameCity.toLowerCase()) {
             return true;
         }

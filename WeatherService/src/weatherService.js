@@ -1,4 +1,4 @@
-const MIN_DELAY = 1;
+    const MIN_DELAY = 1;
 const MAX_DELAY = 3;
 
 async function getWeather(call, callback){
