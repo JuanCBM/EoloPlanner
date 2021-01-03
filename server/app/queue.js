@@ -23,19 +23,22 @@ async function initialize(wss) {
                 durable: false
             });
 
-            channel.consume(notificationsQueue, function (msg) {
-
+            channel.consume(notificationsQueue, async function (msg) {
                 console.log("Message:", msg.content.toString());
-                    let plant = JSON.parse(msg.content.toString());
+                let plant = JSON.parse(msg.content.toString());
+                await updateDatabase(JSON.parse(msg.content));
+                    //if (plant.progress === 100) {
+                        wss.clients.forEach(function (client) {
+                            //if (client.id === socketIds.getClient(plant.id).client) {
+                                console.log('Client:' + client);
+                                client.send(msg.content.toString());
+                            //}
+                        });
+                    //} else {
+                        // let ws = await wss.clients.get(plant.id);
+                        // if (ws) ws.send(plant);
+                    //}
 
-                    wss.clients.forEach(function (client) {
-                        if (client.id === socketIds.getClient(plant.id).client) {
-
-                            console.log('Client:' + client);
-                            client.send(msg.content.toString());
-                        }
-                });
-                    updateDatabase(JSON.parse(msg.content))
             }, { noAck: true }
             );
         });

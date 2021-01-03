@@ -1,4 +1,4 @@
-let webSocket = new WebSocket("ws://" + window.location.host + "/plantNotifications");
+let socket = new WebSocket("ws://" + window.location.host + "/plantNotifications");
 const baseUrlPath = "http://localhost:3000/plants";
 let availableCitiesCreated = [];
 let socketId = null;
@@ -7,11 +7,11 @@ let plantsCreated = [];
 loadPlants();
 loadAvailableCities();
 
-    webSocket.onopen = function (e) {
+    socket.onopen = function (e) {
         console.log("WebSocket connection established");
     };
 
-    webSocket.onmessage = function (event) {
+    socket.onmessage = function (event) {
         console.debug("WebSocket message received:", event);
 
         let plant = JSON.parse(event.data);
@@ -24,7 +24,7 @@ loadAvailableCities();
         }
     };
 
-    webSocket.onclose = function (event) {
+    socket.onclose = function (event) {
         if (event.wasClean) {
             console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
         } else {
@@ -32,7 +32,7 @@ loadAvailableCities();
         }
     };
 
-    webSocket.onerror = function (error) {
+    socket.onerror = function (error) {
         console.log(`[error] ${error.message}`);
     };
 
