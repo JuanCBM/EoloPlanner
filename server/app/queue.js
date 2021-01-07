@@ -60,8 +60,6 @@ process.on('exit', (code) => {
     console.log(`Closing rabbitmq channel`);
 });
 
-
-
 const sendMessageToQueue = (message) => {
     console.log("publishToQueue: '" + message + "'");
     creationChannel.sendToQueue(createPlantRequestQueue, Buffer.from(message));
@@ -69,7 +67,7 @@ const sendMessageToQueue = (message) => {
 
 function updateDatabase(plantInfo) {
     db.Plant.update(
-        {progress: plantInfo.progress},
+        {progress: plantInfo.progress, planning: plantInfo.planning},
         {where: {id: plantInfo.id}})
 }
 

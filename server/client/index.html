@@ -5,22 +5,18 @@
     <title>Eoloplants</title>
 </head>
 
-<body>
-    <label for="city"></label><input type="text" id="city">
+<body onload="loadAvailableCities();">
+    <label for="city"></label>
+    <input type="text" id="city">
 
     <button id="creationButtonPlant" onclick="createPlant()">Create Plant</button>
     <div id="progressText"></div>
-    <section>
-        <h3>All the cities available to create an Eoloplant:</h3>
-    <ul id="availableCitiesCreated">
-    </ul>
-    </section>
 
-    <section>
-        <h3>Plants created: </h3>
-    <ul id="plants">
-    </ul>
-    </section>
+    <h3>Available cities:</h3>
+    <ul id="availableCitiesCreated"></ul>
+
+    <h3>Plants created: </h3>
+    <ul id="plants"></ul>
 
 </body>
 

@@ -26,6 +26,7 @@ module.exports = (app, Plant, queue) => {
         })
     );
 
+    // TODO: DELETE???
     app.delete("/plants/:city", (req, res) =>
         Plant.destroy({
             where: {

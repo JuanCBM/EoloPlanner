@@ -17,8 +17,6 @@ async function initialize(app) {
     await connection.query(`DROP DATABASE IF EXISTS \`${database}\`;`);
     await connection.query(`CREATE DATABASE \`${database}\`;`);
 
-
-
     // Plant routes
     plantRoutes(app, Plant, queue);
 
