@@ -1,8 +1,8 @@
 const amqp = require('amqplib/callback_api');
-const db = require('../app/database');
 const CONN_URL = 'amqp://guest:guest@localhost';
 
-const socketIds = require('../models/socketId');
+const db = require("./database");
+const Plant = db.plants;
 
 const createPlantRequestQueue = 'eoloplantCreationRequests';
 const notificationsQueue = 'eoloplantCreationProgressNotifications';
@@ -56,7 +56,7 @@ const sendMessageToQueue = (message) => {
 };
 
 function updateDatabase(plantInfo) {
-  db.Plant.update(
+  Plant.update(
       {progress: plantInfo.progress, planning: plantInfo.planning},
       {where: {id: plantInfo.id}})
 }

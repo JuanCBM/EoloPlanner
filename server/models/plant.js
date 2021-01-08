@@ -1,19 +1,19 @@
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, Sequelize) => {
   return sequelize.define('plant', {
     id: {
       primaryKey: true,
-      type: DataTypes.INTEGER,
+      type: Sequelize.INTEGER,
       autoIncrement: true
     },
     city: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false
     },
     progress: {
-      type: DataTypes.INTEGER
+      type: Sequelize.INTEGER
     },
     planning: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
   });
 }

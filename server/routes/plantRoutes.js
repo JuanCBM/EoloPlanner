@@ -1,6 +1,8 @@
 const socketIds = require('../models/socketId');
+const db = require("../app/database");
+const Plant = db.plants;
 
-module.exports = (app, Plant, queue) => {
+module.exports = (app, queue) => {
 
   app.get("/plants/", (req, res) =>
       Plant.findAll().then((result) => res.json(result))

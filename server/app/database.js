@@ -1,29 +1,24 @@
-const mysql = require('mysql2/promise');
-const {Sequelize, DataTypes} = require('sequelize');
-const database = "eoloplant";
-const plantRoutes = require('../routes/plantRoutes');
-const plantModel = require('../models/plant');
-const queue = require('./queue');
+const dbConfig = require("../config/dbconfig.js");
 
-// connect to db
-const sequelize = new Sequelize(database, "root", "pass", {dialect: 'mysql'});
+const Sequelize = require("sequelize");
+const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
+  host: dbConfig.HOST,
+  dialect: dbConfig.dialect,
+  operatorsAliases: false,
 
-// init models and add them to the exported db object
-let Plant = plantModel(sequelize, DataTypes);
+  pool: {
+    max: dbConfig.pool.max,
+    min: dbConfig.pool.min,
+    acquire: dbConfig.pool.acquire,
+    idle: dbConfig.pool.idle
+  }
+});
 
-async function initialize(app) {
-  // create db if it doesn't already exist
-  const connection = await mysql.createConnection(
-      {host: "localhost", port: "3306", user: "root", password: "pass"});
-  await connection.query(`DROP DATABASE IF EXISTS \`${database}\`;`);
-  await connection.query(`CREATE DATABASE \`${database}\`;`);
+const db = {};
 
-  // Plant routes
-  plantRoutes(app, Plant, queue);
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
 
-  // sync all models with database
-  await sequelize.sync();
-}
+db.plants = require("../models/plant.js")(sequelize, Sequelize);
 
-module.exports.initialize = initialize;
-module.exports.Plant = Plant;
+module.exports = db;
