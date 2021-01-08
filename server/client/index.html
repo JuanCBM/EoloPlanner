@@ -1,22 +1,21 @@
 <html>
 
 <head>
-    <script src="client.js"></script>
-    <title>Eoloplants</title>
+  <script src="client.js"></script>
+  <title>Eoloplants</title>
 </head>
 
 <body onload="loadAvailableCities();">
-    <label for="city"></label>
-    <input type="text" id="city">
+<label for="city"></label>
+<input id="city" type="text">
 
-    <button id="creationButtonPlant" onclick="createPlant()">Create Plant</button>
-    <div id="progressText"></div>
+<button id="creationButtonPlant" onclick="createPlant()">Create Plant</button>
 
-    <h3>Available cities:</h3>
-    <ul id="availableCitiesCreated"></ul>
+<h3>Available cities:</h3>
+<ul id="availableCitiesCreated"></ul>
 
-    <h3>Plants created: </h3>
-    <ul id="plants"></ul>
+<h3>Plants created: </h3>
+<ul id="plants"></ul>
 
 </body>
 
