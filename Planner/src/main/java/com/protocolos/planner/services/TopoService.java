@@ -1,9 +1,8 @@
 package com.protocolos.planner.services;
 
 import com.protocolos.planner.models.Topography;
-import org.springframework.scheduling.annotation.Async;
-
 import java.util.concurrent.CompletableFuture;
+import org.springframework.scheduling.annotation.Async;
 
 public interface TopoService {
 
