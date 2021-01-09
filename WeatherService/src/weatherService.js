@@ -1,9 +1,9 @@
-    const MIN_DELAY = 1;
+const MIN_DELAY = 1;
 const MAX_DELAY = 3;
 
 async function getWeather(call, callback){
 
-    console.log('Request received: '+JSON.stringify(call));
+    console.log('Request received: ' + JSON.stringify(call));
 
     let { city } = call.request;
     let weather = 'sunny';

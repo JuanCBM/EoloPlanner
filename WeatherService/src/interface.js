@@ -1,7 +1,7 @@
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 
-var packageDefinition = protoLoader.loadSync(__dirname + '/../WeatherService.proto',
+const packageDefinition = protoLoader.loadSync(__dirname + '/../WeatherService.proto',
     {
         keepCase: true,
         longs: String,
@@ -10,6 +10,6 @@ var packageDefinition = protoLoader.loadSync(__dirname + '/../WeatherService.pro
         oneofs: true
     });
 
-var weatherServiceProto = grpc.loadPackageDefinition(packageDefinition);
+const weatherServiceProto = grpc.loadPackageDefinition(packageDefinition);
 
 module.exports = weatherServiceProto.com.protocolos.eoloplanner.WeatherService;
