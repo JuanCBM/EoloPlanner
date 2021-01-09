@@ -2,11 +2,9 @@ package com.protocolos.toposervice.utils;
 
 import com.protocolos.toposervice.models.Topography;
 import com.protocolos.toposervice.repositories.TopographyRepository;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
-
-import javax.annotation.PostConstruct;
 
 @Component
 public class DatabaseInitializer {
