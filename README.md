@@ -11,7 +11,7 @@
 - Mysql
 Base de datos mysql
 > docker run -p 3306:3306 --name plant-mysql-db -e MYSQL_ROOT_PASSWORD=pass -e MYSQL_DATABASE=eoloplant -e -d mysql:latest  
-
+- Para hacer pruebas hemos utilizado una extensión de chrome: Simple Web Socket Client
 
 ### RabbitMQ 
 Disponemos de dos colas:
@@ -29,9 +29,9 @@ Enlace al gestor de rabbitmq: [http://localhost:15672/](http://localhost:15672/)
 Consume mensajes de la cola, conecta con WeatherService y TopoService, escribe mensaje en la cola.
 - Spring Boot (Java)
 - Consumición de datos en paralelo
-- Es necesario hacer un 
+- Es necesario ejecutar el comando siguiente para generar las fuentes del Proto.
 > clean install 
-para generar las fuentes del Proto.
+
 Posteriormente hay que importar las fuentes:
   - Click derecho sobre la carpeta del proyecto
   - Maven

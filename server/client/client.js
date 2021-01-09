@@ -157,8 +157,7 @@ function loadAvailableCities() {
 
 function isCityAvailable(nameCity) {
   for (let i = 0; i < availableCitiesCreated.length; i++) {
-    if (availableCitiesCreated[i].city.toLowerCase()
-        === nameCity.toLowerCase()) {
+    if (availableCitiesCreated[i].city === nameCity) {
       return true;
     }
   }
