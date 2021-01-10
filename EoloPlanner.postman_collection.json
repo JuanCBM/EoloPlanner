@@ -55,6 +55,48 @@
 					"response": []
 				},
 				{
+					"name": "getPlant",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/eoloplants/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"eoloplants",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePlant",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/eoloplants/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"eoloplants",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "createPlant",
 					"request": {
 						"method": "POST",
