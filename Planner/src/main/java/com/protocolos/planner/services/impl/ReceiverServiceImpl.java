@@ -66,13 +66,13 @@ public class ReceiverServiceImpl {
       logger.info("[TOPOGRAPHY] Got topography detail from remote topo service {}",
           topography.getLandscape());
       writeMessageToNotificationQueue(percentage, cityConcatenation, city,
-          topography.getLandscape());
+          DELIMITER+topography.getLandscape());
     });
 
     page2.thenAccept(weather -> {
       logger.info("[WEATHER] Got weather detail from remote weather service {}",
           weather.getWeather());
-      writeMessageToNotificationQueue(percentage, cityConcatenation, city, weather.getWeather());
+      writeMessageToNotificationQueue(percentage, cityConcatenation, city, DELIMITER+weather.getWeather());
     });
 
     // Wait until they are all done
@@ -90,11 +90,8 @@ public class ReceiverServiceImpl {
     percentage.set(percentage.get() + SEGMENT_PERCENTAGE);
     city.setProgress(percentage.get());
 
-    if(cityConcatenation != null && message!=null) {
-      cityConcatenation.set(cityConcatenation.get().concat(DELIMITER+message));
-    } else {
-      cityConcatenation.set(cityConcatenation.get().concat(message));
-    }
+    cityConcatenation.set(cityConcatenation.get().concat(message));
+
 
     if (MAX_PERCENTAGE.equals(city.getProgress())) {
       city.setCompleted(Boolean.TRUE);
