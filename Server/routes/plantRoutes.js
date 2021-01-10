@@ -11,6 +11,28 @@ module.exports = (app, queue) => {
       })
   );
 
+  app.get("/api/eoloplants/:id", (req, res) =>
+      Plant.findOne({
+        where: {
+          id: req.params.id
+        }
+      }).then(function (result) {
+        if (!result) {
+          res.status(404).send("Not found eolicplant at id:" + req.params.id);
+        } else {
+          res.json(result).status(200);
+        }
+      })
+  );
+
+  app.delete("/api/eoloplants/:id", (req, res) =>
+      Plant.destroy({
+        where: {
+          id: req.params.id
+        }
+      }).then((result) => res.json(result))
+  );
+
   app.post("/api/eoloplants/", (req, res) =>
       Plant.create({
         city: req.body.city
