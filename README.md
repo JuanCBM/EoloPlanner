@@ -35,7 +35,15 @@
 **4.** La aplicación Eoloplanner está en ejecución y se encuentra disponible en la url:
 ###[http://127.0.0.1:3000/](http://127.0.0.1:3000/)
 
-OPCIONAL: Si se desea ejecutar cada modulo 
+**OPCIONAL:** 
+- Si se desea ejecutar cada módulo por separado basta con comentar los módulos del script 'exec.js' que no se desean ejecutar.  
+
+**COMENTARIOS:**
+- Hemos adjuntado las siguientes dos peticiones en una colección de postman disponible en la raíz del proyecto
+  para probar el Server, ya que desde el client no existía requisito de que esas operaciones se pudieran realizar.
+  - Obtener los detalles de una planta
+  - Borrar una planta  
+
 
 ## Servicios de la aplicación:
 
