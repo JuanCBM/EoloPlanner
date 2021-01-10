@@ -6,6 +6,9 @@ module.exports = (app, queue) => {
 
   app.get("/plants/", (req, res) =>
       Plant.findAll().then((result) => res.json(result))
+      .catch(function (err) {
+            res.status(500).json({message: err.message})
+      })
   );
 
   app.post("/plants/", (req, res) =>
@@ -23,18 +26,8 @@ module.exports = (app, queue) => {
         queue.sendMessageToQueue(
             JSON.stringify({id: result.id, city: result.city}));
       }).catch(function (err) {
-        console.log(err);
-        //TODO: Cambiar el error o vercomo lo solventamos
-        res.json(err);
+        res.status(404).json({message: err.message})
       })
   );
 
-  // TODO: DELETE???
-  app.delete("/plants/:city", (req, res) =>
-      Plant.destroy({
-        where: {
-          city: req.params.city
-        }
-      }).then((result) => res.json(result))
-  );
 }
