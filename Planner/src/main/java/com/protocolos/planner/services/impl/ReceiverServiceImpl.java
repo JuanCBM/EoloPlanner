@@ -26,6 +26,8 @@ public class ReceiverServiceImpl {
   private static final Logger logger = LoggerFactory.getLogger(ReceiverServiceImpl.class);
 
   private static final char LETTER_LIMIT = 'm';
+  private static final String DELIMITER = "-";
+
   private static final int SEGMENT_PERCENTAGE = 25;
   private static final int MIN_DELAY = 1;
   private static final int MAX_DELAY = 3;
@@ -88,7 +90,11 @@ public class ReceiverServiceImpl {
     percentage.set(percentage.get() + SEGMENT_PERCENTAGE);
     city.setProgress(percentage.get());
 
-    cityConcatenation.set(cityConcatenation.get().concat(message));
+    if(cityConcatenation != null && message!=null) {
+      cityConcatenation.set(cityConcatenation.get().concat(DELIMITER+message));
+    } else {
+      cityConcatenation.set(cityConcatenation.get().concat(message));
+    }
 
     if (MAX_PERCENTAGE.equals(city.getProgress())) {
       city.setCompleted(Boolean.TRUE);

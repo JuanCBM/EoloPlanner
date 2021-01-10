@@ -1,6 +1,6 @@
 let socket = new WebSocket(
     "ws://" + window.location.host + "/plantNotifications");
-const baseUrlPath = "http://localhost:3000/plants";
+const baseUrlPath = "http://localhost:3000/api/eoloplants";
 
 let availableCitiesCreated = [];
 let socketId = null;

@@ -35,6 +35,7 @@
 **4.** La aplicación Eoloplanner está en ejecución y se encuentra disponible en la url:
 ###[http://127.0.0.1:3000/](http://127.0.0.1:3000/)
 
+OPCIONAL: Si se desea ejecutar cada modulo 
 
 ## Servicios de la aplicación:
 

@@ -30,6 +30,60 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Server",
+			"item": [
+				{
+					"name": "getPlants",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/eoloplants",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"eoloplants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createPlant",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"city\": \"Madrid\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/eoloplants",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"eoloplants"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

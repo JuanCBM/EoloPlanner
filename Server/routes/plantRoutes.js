@@ -4,14 +4,14 @@ const Plant = db.plants;
 
 module.exports = (app, queue) => {
 
-  app.get("/plants/", (req, res) =>
+  app.get("/api/eoloplants/", (req, res) =>
       Plant.findAll().then((result) => res.json(result))
       .catch(function (err) {
             res.status(500).json({message: err.message})
       })
   );
 
-  app.post("/plants/", (req, res) =>
+  app.post("/api/eoloplants/", (req, res) =>
       Plant.create({
         city: req.body.city
       }).then((result) => {
