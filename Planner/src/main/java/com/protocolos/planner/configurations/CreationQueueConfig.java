@@ -15,4 +15,13 @@ public class CreationQueueConfig {
     Queue creationQueue() {
         return new Queue(QUEUE_CREATION_NAME, IS_DURABLE_QUEUE);
     }
+
+    // TODO: [Correccion] Se puede añadir un Jackson2JsonMessageConverter que permite mandar objetos.
+    /*
+    @Bean
+    public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
+        return new Jackson2JsonMessageConverter();
+    }
+    */
+
 }

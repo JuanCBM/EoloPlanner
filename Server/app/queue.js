@@ -55,6 +55,7 @@ const sendMessageToQueue = (message) => {
   creationChannel.sendToQueue(createPlantRequestQueue, Buffer.from(message));
 };
 
+// TODO: [Correccion] Podriamos desacoplar esta parte de la lógica de la cola introduciendo esta parte en un servicio.
 function updateDatabase(plantInfo) {
   Plant.update(
       {progress: plantInfo.progress, planning: plantInfo.planning},

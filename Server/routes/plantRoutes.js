@@ -1,7 +1,7 @@
 const socketIds = require('../models/socketId');
 const db = require("../app/database");
 const Plant = db.plants;
-
+// TODO: [Correccion] Podria ser necesario introducir un servicio que realice las operaciones.
 module.exports = (app, queue) => {
 
   app.get("/api/eoloplants/", (req, res) =>
